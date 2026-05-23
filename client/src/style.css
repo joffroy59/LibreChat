@@ -3063,8 +3063,60 @@ html {
 .t-card-select {
   transition: border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
     background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.t-card-select:active {
+  transform: scale(0.985);
 }
 @media (prefers-reduced-motion: reduce) {
   .t-card-select { transition: none; }
+  .t-card-select:active { transform: none; }
+}
+
+/* List item enter / exit (used by selected tools list in the agent panel).
+   Combines a short X-axis translate, opacity, and 2px cross-blur — same
+   ease the rest of the panel uses for surface transitions. */
+:root {
+  --list-item-enter-dur: 320ms;
+  --list-item-exit-dur: 200ms;
+  --list-item-translate-x: 12px;
+  --list-item-blur: 2px;
+  --list-item-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.t-list-item {
+  transition:
+    transform var(--list-item-enter-dur) var(--list-item-ease),
+    opacity var(--list-item-enter-dur) var(--list-item-ease),
+    filter var(--list-item-enter-dur) var(--list-item-ease),
+    background-color 150ms var(--list-item-ease);
+  will-change: transform, opacity, filter;
+}
+.t-list-item[data-state="enter"] {
+  opacity: 0;
+  transform: translateX(calc(var(--list-item-translate-x) * -1));
+  filter: blur(var(--list-item-blur));
+}
+.t-list-item[data-state="idle"] {
+  opacity: 1;
+  transform: translateX(0);
+  filter: blur(0);
+}
+.t-list-item[data-state="exit"] {
+  opacity: 0;
+  transform: translateX(calc(var(--list-item-translate-x) * -1));
+  filter: blur(var(--list-item-blur));
+  pointer-events: none;
+  transition-duration: var(--list-item-exit-dur);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-list-item { transition: none; }
+  .t-list-item[data-state="enter"],
+  .t-list-item[data-state="exit"] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }

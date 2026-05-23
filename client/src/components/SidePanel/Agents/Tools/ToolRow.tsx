@@ -11,6 +11,7 @@ interface Props {
   onClick: (item: AgentItem) => void;
   onInfo: (item: AgentItem) => void;
   onRemove: (item: AgentItem) => void;
+  dataState?: 'enter' | 'idle' | 'exit';
 }
 
 function getSuffix(item: AgentItem): string | null {
@@ -50,15 +51,17 @@ function RowIcon({ item }: { item: AgentItem }) {
   );
 }
 
-export default function ToolRow({ item, onClick, onInfo, onRemove }: Props) {
+export default function ToolRow({ item, onClick, onInfo, onRemove, dataState }: Props) {
   const localize = useLocalize();
   const suffix = getSuffix(item);
   const displayName = item.kind === 'builtin' ? localize(item.name as TranslationKeys) : item.name;
 
   return (
     <div
+      data-state={dataState}
       className={cn(
-        'group relative flex w-full items-center gap-2 rounded-lg px-2 py-1.5 transition-colors',
+        't-list-item',
+        'group relative flex w-full items-center gap-2 rounded-lg px-2 py-1.5',
         'hover:bg-surface-secondary',
       )}
     >
