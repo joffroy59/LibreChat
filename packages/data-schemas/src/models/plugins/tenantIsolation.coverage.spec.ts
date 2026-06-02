@@ -14,7 +14,7 @@ const TENANT_ISOLATION_APPLIED = Symbol.for('librechat:tenantIsolation');
  * methods (see models/systemGrant). Adding an entry here must be a deliberate,
  * reviewed decision — that is the whole point of this guard.
  */
-const MANUAL_TENANT_SCOPING = new Set<string>(['SystemGrant']);
+const MANUAL_TENANT_SCOPING = new Set<string>(['SystemGrant', 'AuditLog']);
 
 function isPluginApplied(schema: mongoose.Schema): boolean {
   return (schema as unknown as { [key: symbol]: boolean })[TENANT_ISOLATION_APPLIED] === true;
