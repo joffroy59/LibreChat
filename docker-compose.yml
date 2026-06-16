@@ -10,7 +10,7 @@ services:
       - mongodb
       - rag_api
     image: registry.librechat.ai/danny-avila/librechat-dev:latest
-    restart: always
+    restart: unless-stopped
     user: "${UID}:${GID}"
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -30,7 +30,7 @@ services:
   mongodb:
     container_name: chat-mongodb
     image: mongo:8.0.20
-    restart: always
+    restart: unless-stopped
     user: "${UID}:${GID}"
     volumes:
       - ./data-node:/data/db
@@ -38,7 +38,7 @@ services:
   meilisearch:
     container_name: chat-meilisearch
     image: getmeili/meilisearch:v1.35.1
-    restart: always
+    restart: unless-stopped
     user: "${UID}:${GID}"
     environment:
       - MEILI_HOST=http://meilisearch:7700
@@ -53,7 +53,7 @@ services:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
-    restart: always
+    restart: unless-stopped
     volumes:
       - pgdata2:/var/lib/postgresql/data
   rag_api:
@@ -62,7 +62,7 @@ services:
     environment:
       - DB_HOST=vectordb
       - RAG_PORT=${RAG_PORT:-8000}
-    restart: always
+    restart: unless-stopped
     depends_on:
       - vectordb
     env_file:

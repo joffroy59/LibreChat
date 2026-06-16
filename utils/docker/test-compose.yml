@@ -16,7 +16,7 @@ services:
     ports:
       - 80:80
       - 443:443
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./client/nginx.conf:/etc/nginx/conf.d/default.conf
   mongodb:
@@ -24,7 +24,7 @@ services:
     ports:  # Uncomment this to access mongodb from outside docker, not safe in deployment
       - 27018:27017
     image: mongo
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./data-node:/data/db
     command: mongod --noauth
@@ -46,7 +46,7 @@ services:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
-    restart: always
+    restart: unless-stopped
     volumes:
       - pgdata2:/var/lib/postgresql/data
   rag_api:
@@ -54,7 +54,7 @@ services:
     environment:
       - DB_HOST=vectordb
       - RAG_PORT=${RAG_PORT:-8000}
-    restart: always
+    restart: unless-stopped
     ports:
       - 8000:8000
     depends_on:
